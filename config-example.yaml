@@ -1,0 +1,17 @@
+redis:
+  host: "redis-database.example.com"
+  port: 6379
+  password: "admin1234"
+  database: 0
+
+jwt:
+  # cryptographically generated random 32 bytes in hex
+  secret-key: "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+  issuer: "oauth.example.com"
+
+oauth:
+  grant-code-expiration: "10s"
+  access-token-expiration: "1h"
+  refresh-token-expiration: "24h"
+  # determines for how much time the refresh token will be tracked to detect wrongful reuse
+  refresh-token-lifetime: "168h" # One week

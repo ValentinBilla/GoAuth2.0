@@ -1,0 +1,17 @@
+<html lang="en">
+<h1>Authorize - {{ .clientId }}</h1>
+<ul>
+{{range .scopes}}
+  <li>{{.}}</li>
+{{end}}
+</ul>
+<form action="/" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <input type="submit" value="Authorize">
+</form>
+</html>
