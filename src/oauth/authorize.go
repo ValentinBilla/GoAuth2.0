@@ -19,8 +19,8 @@ type authorizationGrantRequest struct {
 	Scope        string `form:"scope"`
 	State        string `form:"state" binding:"required"`
 
-	CodeChallenge       string `form:"code_challenge"`
-	CodeChallengeMethod string `form:"code_challenge_method" binding:"required_with=CodeChallenge,oneof=plain S256"`
+	CodeChallenge       string `form:"code_challenge" binding:"required,if=CodeChallengeMethod=plain"`
+	CodeChallengeMethod string `form:"code_challenge_method" binding:"required,oneof=plain S256"`
 
 	Username string `form:"username"`
 	Password string `form:"password"`

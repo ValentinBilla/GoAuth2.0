@@ -12,7 +12,7 @@ type AuthorizationCodeCachedProperties struct {
 	Username            string `json:"username"`
 	Scope               string `json:"scope"`
 	CodeChallenge       string `json:"code_challenge"`
-	CodeChallengeMethod string `json:"code_challenge_method" required:"oneof=plain S256"`
+	CodeChallengeMethod string `json:"code_challenge_method"`
 }
 
 func SaveAuthorizationCode(code string, properties AuthorizationCodeCachedProperties) error {
