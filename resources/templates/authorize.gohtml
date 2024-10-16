@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GoAuth</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="../assets/style.css" />
+</head>
+
+<body>
+<img class="logo" alt="GoAuth logo" src="assets/favicon.svg" width="100" height="100" />
+<main>
+    <div>
+        <h1>Authorize <span class="nowrap">{{ .clientName }}</span></h1>
+        <ul>
+            {{range .scopes}}<li>{{.}}</li>{{end}}
+        </ul>
+    </div>
+
+    <form action="/" method="post">
+        <div class="input-wrapper">
+            <input autocomplete="off" class="input" type="text" id="username" placeholder="Username" />
+            <label class="label" for="username">
+                Username
+            </label>
+        </div>
+        <div class="input-wrapper">
+            <input autocomplete="off" class="input" type="password" id="password" placeholder="Username" />
+            <label class="label" for="password">
+                Password
+            </label>
+        </div>
+        <button class="button" type="submit">Authorize</button>
+    </form>
+</main>
+</body>
+</html>

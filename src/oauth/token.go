@@ -191,7 +191,7 @@ func verifyCodeChallenge(challenge string, method string, verifier string) (bool
 }
 
 func generateRefreshToken(clientId string, username string, scope string) (string, error) {
-	token := generateRandomCode()
+	token := utils.GenerateRandomCode()
 
 	expiration := time.Now().Add(utils.Config.OAuth.RefreshTokenExpiration).Unix()
 	properties := infra.RefreshTokenCachedProperties{

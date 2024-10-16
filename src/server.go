@@ -2,6 +2,7 @@ package main
 
 import (
 	"GoAuth2.0/authentication"
+	"GoAuth2.0/clients"
 	"GoAuth2.0/infra"
 	"GoAuth2.0/mock_server"
 	"GoAuth2.0/oauth"
@@ -13,21 +14,29 @@ import (
 
 func main() {
 	utils.LoadConfiguration()
+	clients.InitClients()
 	users.InitUsers()
+
 	defer infra.CloseRedisClient()
 
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
+	r.Static("/assets", "./resources/assets")
+	r.StaticFile("/favicon.ico", "./resources/assets/favicon.ico")
+	r.LoadHTMLGlob("./resources/templates/*")
+
+	r.GET("/health", func(c *gin.Context) {
+		c.String(200, "LIVE")
+	})
 
 	r.GET("/authorize", oauth.GetAuthorize)
 	r.POST("/authorize", oauth.PostAuthorize)
 	r.POST("/token", oauth.PostToken)
 
 	// Test route to use generated access tokens
-	scopes := r.Group("/resources/photos")
-	scopes.Use(authentication.JwtAuthenticationHandler("photos"))
+	photos := r.Group("/photos")
+	photos.Use(authentication.JwtAuthenticationHandler("photos"))
 	{
-		scopes.GET("/:id", mock_server.GetPhotoById)
+		photos.GET("/:id", mock_server.GetPhotoById)
 	}
 
 	if err := r.Run(); err != nil {

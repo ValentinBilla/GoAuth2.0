@@ -1,10 +1,10 @@
 package oauth
 
 import (
+	"GoAuth2.0/clients"
 	"GoAuth2.0/infra"
 	"GoAuth2.0/users"
-	"crypto/rand"
-	"encoding/base64"
+	"GoAuth2.0/utils"
 	"github.com/alexedwards/argon2id"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -19,7 +19,7 @@ type authorizationGrantRequest struct {
 	Scope        string `form:"scope"`
 	State        string `form:"state" binding:"required"`
 
-	CodeChallenge       string `form:"code_challenge" binding:"required,if=CodeChallengeMethod=plain"`
+	CodeChallenge       string `form:"code_challenge" binding:"required"`
 	CodeChallengeMethod string `form:"code_challenge_method" binding:"required,oneof=plain S256"`
 
 	Username string `form:"username"`
@@ -33,10 +33,14 @@ func GetAuthorize(c *gin.Context) {
 		return
 	}
 
-	c.Header("Content-Type", "text/html; charset=utf-8")
+	client := clients.GetClient(request.ClientId)
+	if client.Name == "" || client.RedirectUri != request.RedirectUri {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid client or redirect uri"})
+	}
+
 	c.HTML(http.StatusOK, "authorize.gohtml", gin.H{
-		"clientId": request.ClientId,
-		"scopes":   strings.Split(request.Scope, "+"),
+		"clientName": client.Name,
+		"scopes":     strings.Split(request.Scope, " "),
 	})
 }
 
@@ -51,6 +55,11 @@ func PostAuthorize(c *gin.Context) {
 	if request.ResponseType == "token" {
 		c.JSON(http.StatusNotImplemented, gin.H{"error": "response_type token"})
 		return
+	}
+
+	client := clients.GetClient(request.ClientId)
+	if client.Name == "" || client.RedirectUri != request.RedirectUri {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid client or redirect uri"})
 	}
 
 	user := users.GetUser(request.Username)
@@ -80,7 +89,7 @@ func PostAuthorize(c *gin.Context) {
 }
 
 func generateAuthorizationGrantCode(request authorizationGrantRequest) (string, error) {
-	code := generateRandomCode()
+	code := utils.GenerateRandomCode()
 	properties := infra.AuthorizationCodeCachedProperties{
 		ClientId:            request.ClientId,
 		RedirectUri:         request.RedirectUri,
@@ -95,12 +104,4 @@ func generateAuthorizationGrantCode(request authorizationGrantRequest) (string, 
 	}
 
 	return code, nil
-}
-
-func generateRandomCode() string {
-	randomBytes := make([]byte, 32)
-	_, _ = rand.Read(randomBytes)
-
-	code := base64.URLEncoding.EncodeToString(randomBytes)
-	return strings.TrimRight(code, "=")
 }

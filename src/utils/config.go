@@ -30,7 +30,7 @@ type ConfigurationProperties struct {
 }
 
 func LoadConfiguration() {
-	configFile, err := os.ReadFile("config.yaml")
+	configFile, err := os.ReadFile("config.yml")
 	if err != nil {
 		panic(err)
 	}

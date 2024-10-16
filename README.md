@@ -16,3 +16,15 @@ specification are not present in this project those are the same that won't be i
 - PKCE is required for all OAuth clients using the authorization code flow
 - The Implicit grant (response_type=token) is omitted from this specification
 - The Resource Owner Password Credentials grant is omitted from this specification
+
+## Run
+### Local
+```shell
+go build -o target/goauth .
+./target/goauth
+```
+
+### Containerized
+```shell
+docker compose up --build goauth
+```

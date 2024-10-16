@@ -13,6 +13,7 @@ type User struct {
 // TODO: Delete InitUsers and support database for such things
 func InitUsers() {
 	AddUser("vbilla", "password1234")
+	AddUser("fbrucker", "password5678")
 }
 
 func AddUser(username string, password string) User {
